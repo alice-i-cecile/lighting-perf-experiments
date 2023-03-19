@@ -30,8 +30,18 @@ fn main() {
         }))
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin::default())
-        .add_systems((setup.on_startup(), move_camera, print_mesh_count))
+        .add_system(setup.on_startup())
+        .add_system(spawn_lights.on_startup())
         .run();
+}
+
+fn spawn_lights(mut commands: Commands) {
+    commands.spawn(DirectionalLightBundle {
+        ..Default::default()
+    });
+    commands.spawn(DirectionalLightBundle {
+        ..Default::default()
+    });
 }
 
 fn setup(
@@ -151,31 +161,6 @@ fn spherical_polar_to_cartesian(p: DVec2) -> DVec3 {
     let (sin_theta, cos_theta) = p.x.sin_cos();
     let (sin_phi, cos_phi) = p.y.sin_cos();
     DVec3::new(cos_theta * sin_phi, sin_theta * sin_phi, cos_phi)
-}
-
-// System for rotating the camera
-fn move_camera(time: Res<Time>, mut camera_query: Query<&mut Transform, With<Camera>>) {
-    let mut camera_transform = camera_query.single_mut();
-    let delta = time.delta_seconds() * 0.15;
-    camera_transform.rotate_z(delta);
-    camera_transform.rotate_x(delta);
-}
-
-// System for printing the number of meshes on every tick of the timer
-fn print_mesh_count(
-    time: Res<Time>,
-    mut timer: Local<PrintingTimer>,
-    sprites: Query<(&Handle<Mesh>, &ComputedVisibility)>,
-) {
-    timer.tick(time.delta());
-
-    if timer.just_finished() {
-        info!(
-            "Meshes: {} - Visible Meshes {}",
-            sprites.iter().len(),
-            sprites.iter().filter(|(_, cv)| cv.is_visible()).count(),
-        );
-    }
 }
 
 #[derive(Deref, DerefMut)]
