@@ -41,6 +41,7 @@ fn spawn_lights(mut commands: Commands) {
             shadows_enabled: true,
             ..Default::default()
         },
+        visibility: Visibility::Hidden,
         ..Default::default()
     });
     commands.spawn(DirectionalLightBundle {
@@ -48,6 +49,7 @@ fn spawn_lights(mut commands: Commands) {
             shadows_enabled: true,
             ..Default::default()
         },
+        visibility: Visibility::Hidden,
         ..Default::default()
     });
 }
