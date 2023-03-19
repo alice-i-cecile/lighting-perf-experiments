@@ -37,9 +37,17 @@ fn main() {
 
 fn spawn_lights(mut commands: Commands) {
     commands.spawn(DirectionalLightBundle {
+        directional_light: DirectionalLight {
+            shadows_enabled: true,
+            ..Default::default()
+        },
         ..Default::default()
     });
     commands.spawn(DirectionalLightBundle {
+        directional_light: DirectionalLight {
+            shadows_enabled: true,
+            ..Default::default()
+        },
         ..Default::default()
     });
 }
